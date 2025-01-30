@@ -13,9 +13,8 @@ function NavbarUnLoged() {
           <Nav className="me-auto">
             {/* Modifie les liens pour inclure /valme */}
             <Link to="/inscription">Home</Link>
-            <Link to="/valme//inscription">Home</Link>
-            <Nav.Link href="/valme/menu">{t("Recipe Gallery")}</Nav.Link>
-            <Nav.Link href="/valme/menu">{t("Recipe Gallery")}</Nav.Link>
+            <Nav.Link href="/menu">{t("Recipe Gallery")}</Nav.Link>
+            <Nav.Link to="/menu">{t("Recipe Gallery")}</Nav.Link>
             <Nav.Link href="/valme/inscription">{t("Inscription")}</Nav.Link>
             <Nav.Link href="/valme/login">{t("Login")}</Nav.Link>
           </Nav>

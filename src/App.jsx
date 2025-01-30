@@ -15,6 +15,7 @@ function App() {
   const [isAuthenticated, setAuthenticated] = useState(false);
 
   return (
+    <Router>
       <Routes>
         <Route path="/" element={<MenuDisplay isAuthenticated={false} />} />
         <Route path="/menu" element={<MenuDisplay isAuthenticated={isAuthenticated} />} />
@@ -48,6 +49,7 @@ function App() {
           element={isAuthenticated ? <DataBase isAuthenticated={isAuthenticated} /> : <Navigate to="/" replace={true} />} 
         />
       </Routes>
+      </Router>
   );
 }
 

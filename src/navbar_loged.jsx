@@ -12,13 +12,13 @@ function NavbarLoged() {
           <Navbar.Brand href="/valme/">{t("Log Out")}</Navbar.Brand>
           <Nav className="me-auto">
             {/* Ajout de /valme devant chaque lien */}
-            <Nav.Link href="/valme/menu">{t("Recipe Gallery")}</Nav.Link>
-            <Nav.Link href="/valme/inscriptionManagement">{t("Registration List")}</Nav.Link>
-            <Nav.Link href="/valme/menuCreate">{t("Add New Recipe")}</Nav.Link>
-            <Nav.Link href="/valme/recipeManagement">{t("Recipe Manager")}</Nav.Link>
-            <Nav.Link href="/valme/database">{t("Database Control")}</Nav.Link>
-            <Nav.Link href="/valme/recipeOrderTable">{t("Order Management")}</Nav.Link>
-            <Nav.Link href="/valme/forecast">{t("The Forecast")}</Nav.Link>
+            <Nav.Link href="/valme/#/menu">{t("Recipe Gallery")}</Nav.Link>
+            <Nav.Link href="/valme/#/inscriptionManagement">{t("Registration List")}</Nav.Link>
+            <Nav.Link href="/valme/#/menuCreate">{t("Add New Recipe")}</Nav.Link>
+            <Nav.Link href="/valme/#/recipeManagement">{t("Recipe Manager")}</Nav.Link>
+            <Nav.Link href="/valme/#/database">{t("Database Control")}</Nav.Link>
+            <Nav.Link href="/valme/#/recipeOrderTable">{t("Order Management")}</Nav.Link>
+            <Nav.Link href="/valme/#/forecast">{t("The Forecast")}</Nav.Link>
           </Nav>
           <Button
             variant="outline-primary"

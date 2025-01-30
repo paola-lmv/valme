@@ -12,10 +12,9 @@ function NavbarUnLoged() {
         <Container>
           <Nav className="me-auto">
             {/* Modifie les liens pour inclure /valme */}
-            <Link to="/inscription">changer</Link>
-            <Nav.Link href="/menu">{t("Recipe Gallery")}</Nav.Link>
+            <Nav.Link href="/valme/#/menu">{t("Recipe Gallery")}</Nav.Link>
             <Nav.Link href="/valme/#/inscription">{t("Inscription")}</Nav.Link>
-            <Nav.Link href="/valme/login">{t("Login")}</Nav.Link>
+            <Nav.Link href="/valme/#/login">{t("Login")}</Nav.Link>
           </Nav>
           <Button
             variant="outline-primary"

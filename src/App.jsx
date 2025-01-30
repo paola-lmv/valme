@@ -15,7 +15,7 @@ function App() {
   const [isAuthenticated, setAuthenticated] = useState(false);
 
   return (
-    <Router basename="/valme">
+    <Router >
       <Routes>
         {console.log(isAuthenticated)}
         <Route path="/valme/" element={<MenuDisplay isAuthenticated={false} />} />

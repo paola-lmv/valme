@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://paola-lmv.github.io/valme/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -18,7 +17,8 @@
     "react-bootstrap": "^2.10.7",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.4.0",
-    "react-router-dom": "^7.1.1"
+    "react-router-dom": "^7.1.1",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

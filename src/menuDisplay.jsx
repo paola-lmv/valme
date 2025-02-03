@@ -4,7 +4,7 @@ import Recipe from './recipe';
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BinIdRecipe } from './acessCode';
+import { BinIdRecipe,BinIdIngredient } from './acessCode';
 import { getData, saveRecipe } from './dataFunction';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
@@ -14,6 +14,11 @@ function MenuDisplay({ isAuthenticated }) {
     const [recipes, setRecipe] = useState([]);  
     const [isLoading, setIsLoading] = useState(true); // State to track loading status
     const { t, i18n } = useTranslation();
+    const [ingredients, setIngredients] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    
+    
 
     // Fetch the list of recipes when the component mounts
     useEffect(() => {
@@ -23,6 +28,13 @@ function MenuDisplay({ isAuthenticated }) {
         setIsLoading(false); // Set loading to false after data is fetched
       };
       fetchRecipes(); // Call the fetchRecipes function
+
+      const fetchIngredient = async () => {
+            const allIngredients = await getData(BinIdIngredient); // Call to fetch ingredient data
+            setIngredients(allIngredients.ingredients);
+            setLoading(false); // Set loading to false once ingredient data is fetched
+          };
+          fetchIngredient(ingredients);
     }, []);
 
    
@@ -52,13 +64,13 @@ function MenuDisplay({ isAuthenticated }) {
             {isAuthenticated ? (<NavbarLoged />) : (<NavbarUnLoged />)}
 
             <Row>
-                {isLoading ? (
+                {isLoading && loading? (
                     <div>{t("Loading")}...</div> // Replaced <tr> with <div> here for loading state
                 ) : (lengthRecipe === 0 ? (
                     <div>No recipes available</div>
                   ) : (
                     // Map through the recipeList and display each recipe
-                    recipe.map((recipe, index) => (
+                    recipes.map((recipe, index) => (
                         <Col sm={12} md={6} lg={4} key={`recipe_${index}`}>
                             <Recipe
                                 isAuthenticated={isAuthenticated}

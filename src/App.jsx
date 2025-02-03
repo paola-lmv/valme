@@ -5,6 +5,7 @@ import Login from './login';
 import MenuCreate from './menuCreate';
 import MenuDisplay from './menuDisplay';
 import Forecast from './forecast';
+import MentionsLegales from './mentionsLegales';
 import InscriptionManagement from './inscriptionManagement';
 import RecipeManagement from './recipeManagement';
 import RecipeOrderTable from './recipeOrderTable';
@@ -20,7 +21,7 @@ function App() {
         <Route path="/" element={<MenuDisplay isAuthenticated={false} />} />
         <Route path="/menu" element={<MenuDisplay isAuthenticated={isAuthenticated} />} />
         <Route path="/inscription" element={<InscriptionForm isAuthenticated={isAuthenticated} />} />
-        <Route path="/mentionsLegales" element={<mentionsLegales isAuthenticated={isAuthenticated} />} />
+        <Route path="/mentionsLegales" element={<MentionsLegales/>} />
         <Route 
           path="/login" 
           element={isAuthenticated ? <Navigate to="/menu" replace={true} /> : <Login isAuthenticated={isAuthenticated} setAuthenticated={setAuthenticated} />} 

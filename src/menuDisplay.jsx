@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 function MenuDisplay({ isAuthenticated }) {
     // State to hold the list of recipes
-    const [recipe, setRecipe] = useState([]);  
+    const [recipes, setRecipe] = useState([]);  
     const [isLoading, setIsLoading] = useState(true); // State to track loading status
     const { t, i18n } = useTranslation();
 
@@ -45,7 +45,7 @@ function MenuDisplay({ isAuthenticated }) {
           saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Save the updated list
       };
 
-    const lengthRecipe = recipe.length; // Get the number of recipes in the list
+    const lengthRecipe = recipes.length; // Get the number of recipes in the list
 
     return (
         <>
@@ -73,8 +73,8 @@ function MenuDisplay({ isAuthenticated }) {
                     ))
                 ))} 
             </Row>
-            <footer style={{ textAlign: 'center', marginTop: '20px', padding: '10px' }}>
-                <Link to="/mentions-legales">Mentions Légales</Link>
+            <footer style={{ textAlign: 'center', marginTop: '20px', padding: '10px', color:'black', fontWeight: 'bold', textDecoration: 'none'}}>          
+              <Link to="/mentionsLegales">Mentions Légales</Link>
             </footer>
         </>
     );

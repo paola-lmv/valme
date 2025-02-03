@@ -20,6 +20,7 @@ function App() {
         <Route path="/" element={<MenuDisplay isAuthenticated={false} />} />
         <Route path="/menu" element={<MenuDisplay isAuthenticated={isAuthenticated} />} />
         <Route path="/inscription" element={<InscriptionForm isAuthenticated={isAuthenticated} />} />
+        <Route path="/mentionsLegales" element={<mentionsLegales isAuthenticated={isAuthenticated} />} />
         <Route 
           path="/login" 
           element={isAuthenticated ? <Navigate to="/menu" replace={true} /> : <Login isAuthenticated={isAuthenticated} setAuthenticated={setAuthenticated} />} 

@@ -58,6 +58,9 @@ function MenuDisplay({ isAuthenticated }) {
                     ))
                 ))} 
             </Row>
+            <footer style={{ textAlign: 'center', marginTop: '20px', padding: '10px' }}>
+                <Link to="/mentions-legales">Mentions Légales</Link>
+            </footer>
         </>
     );
 }

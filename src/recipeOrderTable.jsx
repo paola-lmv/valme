@@ -42,7 +42,7 @@ function RecipeOrderTable({ isAuthenticated }) {
   console.log("inscription", inscriptionList)
 
   const NumberInscription = inscriptionList.length;
-
+  const NumberVegetarians = inscriptionList.filter(inscription => inscription.vege === 'Yes').length;
 
   // Function to calculate ingredient data based on the recipes and ingredients
   const calculateIngredientData = () => {
@@ -111,7 +111,7 @@ function RecipeOrderTable({ isAuthenticated }) {
      {isAuthenticated ? <NavbarLoged /> : <NavbarUnLoged />}
       <h2>{t("Recipe Order Table")}</h2><br/>
       <h6>{t("Number of inscription at the event :")} {NumberInscription} </h6>
-      <h6>{t("Number of vegetarians :")} </h6>
+      <h6>{t("Number of vegetarians :")}{NumberVegetarians} </h6>
       <button onClick={updateAllRecipeCommands}>{t("Update Commands with Number of Inscriptions")}</button> {/* Nouveau bouton */}
       <br/>
       <div style={{ overflowX: 'auto' }}>

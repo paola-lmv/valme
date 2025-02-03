@@ -2,12 +2,12 @@ import NavbarUnLoged from './navbar_unloged';
 import NavbarLoged from './navbar_loged';
 import React, { useState, useEffect } from 'react';
 import { BinIdRecipe,BinIdIngredient } from './acessCode';
-import { getData, saveRecipe, handleChange } from './dataFunction';
+import { getData, saveRecipe, handleChange,saveIngredient2 } from './dataFunction';
 import { useTranslation } from "react-i18next";
 
 function RecipeManagement({ isAuthenticated }) {
   const [recipes, setRecipe] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredientsList, setIngredientsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isIngredientsLoading, setIsIngredientsLoading] = useState(true);
@@ -28,7 +28,7 @@ function RecipeManagement({ isAuthenticated }) {
     fetchRecipe(recipes);
     const fetchIngredients = async () => {
           const allIngredients = await getData(BinIdIngredient); 
-          setIngredients(allIngredients.ingredients);
+          setIngredientsList(allIngredients.ingredients);
           setIsIngredientsLoading(false); 
         };
         fetchIngredients();
@@ -56,12 +56,14 @@ function RecipeManagement({ isAuthenticated }) {
     console.log("supprime une recette")
     // Get the recipe to be deleted
     const recipeToDelete = recipes[index];
-    console.log("ingredient")
-    console.log(ingredients)
-    ingredients.forEach((ingredient) => {
-            console.log("pour chaque ingrédient ")
+
+    ingredientsList.forEach((ingredient) => {
+            console.log(ingredient,"pour chaque ingrédient")
             // Check if the ingredient's listRecipe includes the title of the recipe to delete
+            console.log("ingredient.listRecipe",ingredient.listRecipe)
+            console.log("ingredient.listRecipe.includes(recipeToDelete.title)", ingredient.listRecipe.includes(recipeToDelete.title))
             if (ingredient.listRecipe && ingredient.listRecipe.includes(recipeToDelete.title)) {
+              console.log("dans le if")
                 // Remove the recipe title from the listRecipe
                 ingredient.listRecipe = ingredient.listRecipe.filter(
                     (title) => title !== recipeToDelete.title
@@ -70,6 +72,8 @@ function RecipeManagement({ isAuthenticated }) {
         })
       const updatedRecipe = recipes.filter((_, i) => i !== index);
       saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Save the updated list
+      saveIngredient2(ingredientsList, BinIdIngredient, setIngredientsList); // Save the updated ingredient data
+      
   };
 
   // Handles changes to individual ingredients in a recipe

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BinIdRecipe,BinIdIngredient } from './acessCode';
-import { getData, saveRecipe } from './dataFunction';
+import { getData, saveRecipe,saveIngredient2 } from './dataFunction';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ function MenuDisplay({ isAuthenticated }) {
             setIngredients(allIngredients.ingredients);
             setLoading(false); // Set loading to false once ingredient data is fetched
           };
-          fetchIngredient(ingredients);
+        fetchIngredient(ingredients);
     }, []);
 
    
@@ -54,6 +54,7 @@ function MenuDisplay({ isAuthenticated }) {
                 }
             })
           const updatedRecipe = recipes.filter((_, i) => i !== index);
+          saveIngredient2(ingredients, BinIdIngredient, setIngredients); // Save the updated ingredient data
           saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Save the updated list
       };
 

@@ -34,10 +34,13 @@ function Forecast({ isAuthenticated }) {
 
   // Function to recalculate ingredient data based on recipes
   const recalculateIngredientData = () => {
+    console.log("lala")
     ingredientsList.forEach((ingredient) => {
+      console.log(ingredient)
       let totalMinPurchaseQty = 0;
       // Iterate through all recipes that use the current ingredient
       ingredient.listRecipe.forEach((recipeName) => {
+        console.log(recipeName)
         const matchingRecipe = recipesList.find(
           recipe => recipe.title === recipeName
         );
@@ -53,7 +56,7 @@ function Forecast({ isAuthenticated }) {
       });
       
       // Update the ingredient's minimum purchase quantity
-      ingredient.minPurchaseQty = parseFloat(totalMinPurchaseQty.toFixed(2));
+      ingredient.minPurchaseQty= parseFloat(totalMinPurchaseQty.toFixed(2));
       // Calculate the ingredient price
       ingredient.ingredientPrice = parseFloat(calculateIngredientPrice(ingredient.unitPrice, ingredient.purchaseQty, ingredient.priceQty).toFixed(2)) ?? "undefined";
     });

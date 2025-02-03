@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 function RecipeManagement({ isAuthenticated }) {
   const [recipes, setRecipe] = useState([]);
-  const [ingredientsList, setIngredientsList] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isIngredientsLoading, setIsIngredientsLoading] = useState(true);
@@ -28,7 +28,7 @@ function RecipeManagement({ isAuthenticated }) {
     fetchRecipe(recipes);
     const fetchIngredients = async () => {
           const allIngredients = await getData(BinIdIngredient); 
-          setIngredientsList(allIngredients.ingredients);
+          setIngredients(allIngredients.ingredients);
           setIsIngredientsLoading(false); 
         };
         fetchIngredients();
@@ -56,8 +56,10 @@ function RecipeManagement({ isAuthenticated }) {
     console.log("supprime une recette")
     // Get the recipe to be deleted
     const recipeToDelete = recipes[index];
-
+    console.log("ingredient")
+    console.log(ingredients)
     ingredients.forEach((ingredient) => {
+            console.log("pour chaque ingrédient ")
             // Check if the ingredient's listRecipe includes the title of the recipe to delete
             if (ingredient.listRecipe && ingredient.listRecipe.includes(recipeToDelete.title)) {
                 // Remove the recipe title from the listRecipe

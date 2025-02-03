@@ -7,10 +7,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BinIdRecipe } from './acessCode';
 import { getData, saveRecipe } from './dataFunction';
 import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
 
 function MenuDisplay({ isAuthenticated }) {
     // State to hold the list of recipes
-    const [recipeList, setRecipeList] = useState([]);  
+    const [recipe, setRecipe] = useState([]);  
     const [isLoading, setIsLoading] = useState(true); // State to track loading status
     const { t, i18n } = useTranslation();
 
@@ -18,19 +19,33 @@ function MenuDisplay({ isAuthenticated }) {
     useEffect(() => {
       const fetchRecipes = async () => {
         const allRecipes = await getData(BinIdRecipe); // Fetch recipes from the API
-        setRecipeList(allRecipes.recipes); // Update state with fetched recipes
+        setRecipe(allRecipes.recipes); // Update state with fetched recipes
         setIsLoading(false); // Set loading to false after data is fetched
       };
       fetchRecipes(); // Call the fetchRecipes function
     }, []);
 
-    // Function to delete a recipe from the list
-    const deleteRecipe = (indexToDelete) => {
-        const updatedRecipeList = recipeList.filter((recipe, index) => index !== indexToDelete); // Remove the recipe at the specified index
-        saveRecipe(updatedRecipeList, BinIdRecipe, setRecipeList); // Save the updated list and handle errors
-    };
+   
+      // Deletes a recipe from the list
+      const deleteRecipe = (index) => {
+        console.log("supprime une recette")
+        // Get the recipe to be deleted
+        const recipeToDelete = recipes[index];
+    
+        ingredients.forEach((ingredient) => {
+                // Check if the ingredient's listRecipe includes the title of the recipe to delete
+                if (ingredient.listRecipe && ingredient.listRecipe.includes(recipeToDelete.title)) {
+                    // Remove the recipe title from the listRecipe
+                    ingredient.listRecipe = ingredient.listRecipe.filter(
+                        (title) => title !== recipeToDelete.title
+                    );
+                }
+            })
+          const updatedRecipe = recipes.filter((_, i) => i !== index);
+          saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Save the updated list
+      };
 
-    const lengthRecipe = recipeList.length; // Get the number of recipes in the list
+    const lengthRecipe = recipe.length; // Get the number of recipes in the list
 
     return (
         <>
@@ -43,7 +58,7 @@ function MenuDisplay({ isAuthenticated }) {
                     <div>No recipes available</div>
                   ) : (
                     // Map through the recipeList and display each recipe
-                    recipeList.map((recipe, index) => (
+                    recipe.map((recipe, index) => (
                         <Col sm={12} md={6} lg={4} key={`recipe_${index}`}>
                             <Recipe
                                 isAuthenticated={isAuthenticated}

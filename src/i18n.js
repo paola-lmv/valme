@@ -163,7 +163,7 @@ const resources = {
       "Submit":"Soumettre",
       "Yes":"Oui",
       "No":"Non",
-      "Are you a member of the BDE?":"Es-tu un membre du BDE?",
+      "Are you a member of the BDE?":"Es-tu adhérent du BDE?",
       "Select an option":"Selectioner une option",
       "Recipe Order Table":"Tableau des commandes de recettes",
       "Command":"Commande",

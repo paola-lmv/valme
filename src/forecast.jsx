@@ -27,6 +27,7 @@ function Forecast({ isAuthenticated }) {
       setIsIngredientsLoading(false); 
     };
     fetchIngredients();
+    recalculateIngredientData()
   }, []); // Empty dependency array to only run on component mount
 
   // Synchronize ingredients with the recipes data (called once after data is loaded)
@@ -50,7 +51,9 @@ function Forecast({ isAuthenticated }) {
         );
         const ingredientQty = parseFloat(matchingIngredient.quantity); // Ingredient quantity in the recipe
         const portionQty = parseFloat(matchingRecipe.portions); // Portion size in the recipe
-
+        console.log("ingredientQty",ingredientQty)
+        console.log("commandQty",commandQty)
+        console.log("portionQty",portionQty)
         // Calculate the minimum purchase quantity for the ingredient in this recipe and add it to the total minimun purchase quantity
         totalMinPurchaseQty += calculateMinPurchaseQty(commandQty, ingredientQty, portionQty);
       });

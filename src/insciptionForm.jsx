@@ -68,6 +68,7 @@ function InscriptionForm({ isAuthenticated }) {
                         placeholder={t("Your Surname")}
                         value={formData.Surname}
                         onChange={handleChange} // Handle change in input value
+                        required
                     />
                 </Form.Group>
 
@@ -79,6 +80,7 @@ function InscriptionForm({ isAuthenticated }) {
                         placeholder={t("Your Last Name")}
                         value={formData.LastName}
                         onChange={handleChange} // Handle change in input value
+                        required
                     />
                 </Form.Group>
 

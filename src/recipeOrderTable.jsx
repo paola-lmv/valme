@@ -7,7 +7,8 @@ import { useTranslation } from "react-i18next";
 
 function RecipeOrderTable({ isAuthenticated }) {
   const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState([]);
+  const [filterRecipes, setFilterRecipes] = useState([]);
+  const [touteRecipes, setTouteRecipes] = useState([]);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,9 +32,12 @@ function RecipeOrderTable({ isAuthenticated }) {
   
     const fetchRecipe = async () => {
       const allRecipe = await getData(BinIdRecipe);
-      setRecipes(allRecipe.recipes.filter(recipe => recipe.event === selectedEvent.title)); // On filtre par titre
+      setTouteRecipes(allRecipe.recipes)
+      setFilterRecipes(allRecipe.recipes.filter(recipe => recipe.event === selectedEvent.title)); // On filtre par titre
       setLoadingData(false);
-      console.log("recipes", recipes);
+      console.log("filterRecipes", filterRecipes);
+      console.log("touteRecipes", touteRecipes);
+
     };
     fetchRecipe();
   
@@ -57,13 +61,13 @@ function RecipeOrderTable({ isAuthenticated }) {
   const NumberVegetarians = inscriptionList.filter(inscription => inscription.vege === 'Yes').length;
 
   const calculateIngredientData = () => {
-    recipes.forEach(recipe => {
+    touteRecipes.forEach(recipe => {
       recipe.price = 0;
     });
 
     ingredients.forEach((ingredient) => {
       ingredient.listRecipe.forEach((item) => {
-        const matchingRecipe = recipes.find(recIng => recIng.title === item);
+        const matchingRecipe = touteRecipes.find(recIng => recIng.title === item);
         if (matchingRecipe) {
           const ingredientData = matchingRecipe.ingredients.find(ing => ing.type === ingredient.type);
           if (ingredientData) {
@@ -78,7 +82,7 @@ function RecipeOrderTable({ isAuthenticated }) {
         }
       });
     });
-    saveRecipe(recipes, BinIdRecipe, setRecipes);
+    saveRecipe(touteRecipes, BinIdRecipe, setTouteRecipes);
   };
 
   useEffect(() => {
@@ -88,17 +92,17 @@ function RecipeOrderTable({ isAuthenticated }) {
   }, [loading, loadingData, selectedEvent]);
 
   const updateAllRecipeCommands = () => {
-    const updatedRecipes = recipes.map(recipe => ({
+    const updatedRecipes = touteRecipes.map(recipe => ({
       ...recipe,
       command: NumberInscription
     }));
-    setRecipes(updatedRecipes);
-    saveRecipe(updatedRecipes, BinIdRecipe, setRecipes);
+    setTouteRecipes(updatedRecipes);
+    saveRecipe(updatedRecipes, BinIdRecipe, setTouteRecipes);
     calculateIngredientData();
   };
 
   const calculateTotalPrice = () => {
-    return recipes.reduce((total, recipe) => total + (recipe.price || 0), 0).toFixed(2);
+    return filterRecipes.reduce((total, recipe) => total + (recipe.price || 0), 0).toFixed(2);
   };
 
   return (
@@ -140,7 +144,7 @@ function RecipeOrderTable({ isAuthenticated }) {
                 </tr>
               </thead>
               <tbody>
-                {recipes.map((recipe, index) => (
+                {filterRecipes.map((recipe, index) => (
                   <tr key={index}>
                     <td>{recipe.title}</td>
                     <td>

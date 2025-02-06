@@ -58,6 +58,21 @@ function InscriptionForm({ isAuthenticated }) {
         setTimeout(() => setMessage(''), 3000);
     };
 
+    // Style en ligne pour centrer le message
+    const messageStyle = {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '5px',
+        fontSize: '18px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        zIndex: 9999, // Assurez-vous que le message est au-dessus des autres éléments
+    };
+
     return (
         <>
             {isAuthenticated ? <NavbarLoged /> : <NavbarUnLoged />}
@@ -84,7 +99,6 @@ function InscriptionForm({ isAuthenticated }) {
                         required
                     >
                         <option value="">{t("Choose an event")}</option>
-                        {console.log("events",events)}
                         {events.map((event, index) => (
                             <option key={index} value={event.title}>{event.title}</option>
                         ))}
@@ -118,7 +132,7 @@ function InscriptionForm({ isAuthenticated }) {
             </Form>
             </>)}
 
-            {message && <div className="alert alert-success mt-3">{message}</div>}
+            {message && <div style={messageStyle}>{message}</div>}
         </>
     );
 };

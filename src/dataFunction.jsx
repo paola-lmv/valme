@@ -23,7 +23,8 @@ export const getData = async (BinId) => {
   try {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${BinId}/latest`, {
       method: 'GET',
-      headers: { 'X-Master-Key': ACCESS_KEY }
+      headers: { 
+        'X-Master-Key': ACCESS_KEY }
     });
     const json = await res.json();
     return json.record; // Return the record from the JSON bin
@@ -52,6 +53,55 @@ export const saveRecipe = async (recipeList, BinId, setRecipeList) => {
     console.error(e); // Log any error that occurs during the save process
   }
 };
+
+// Fonction pour supprimer un événement
+export const deleteEvent = async (eventToDelete,BinId) => {
+  try {
+    // Supposons que vous ayez une API qui accepte une requête DELETE pour supprimer un événement
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${BinId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': ACCESS_KEY
+      },
+      body: JSON.stringify({evenement: eventToDelete}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la suppression de l\'événement');
+    }
+
+    return response.json(); // Retourner la réponse du serveur si nécessaire
+  } catch (error) {
+    console.error("Erreur lors de la suppression de l'événement : ", error);
+    throw error; // Propager l'erreur pour qu'elle puisse être gérée dans le composant
+  }
+};
+
+// Fonction pour mettre à jour un événement
+export const updateEvent = async (eventToUpdate) => {
+  try {
+    // Supposons que vous ayez une API qui accepte une requête PUT pour mettre à jour un événement
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${BinId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': ACCESS_KEY
+      },
+      body: JSON.stringify({evenement : eventToUpdate}), // Envoie les données modifiées dans le corps de la requête
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la mise à jour de l\'événement');
+    }
+
+    return response.json(); // Retourner la réponse du serveur si nécessaire
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'événement : ", error);
+    throw error; // Propager l'erreur pour qu'elle puisse être gérée dans le composant
+  }
+};
+
 
 // Function to save ingredient data to the JSON bin
 export const saveIngredient2 = async (ingredientList, BinId, setIngredientList) => {
@@ -104,6 +154,24 @@ export const saveInscription = async (inscriptionList, BinId, setInscriptionList
     });
     if (res.ok) {
       setInscriptionList(inscriptionList); // Update the inscription list state with the new data
+    }
+  } catch (e) {
+    console.error(e); // Log any error that occurs during the save process
+  }
+};
+
+export const saveEvent = async (eventList, BinId, setEvent) => {
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BinId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': ACCESS_KEY
+      },
+      body: JSON.stringify({ evenement: eventList }) // Save the inscriptions as an array
+    });
+    if (res.ok) {
+      setEvent(eventList); // Update the inscription list state with the new data
     }
   } catch (e) {
     console.error(e); // Log any error that occurs during the save process

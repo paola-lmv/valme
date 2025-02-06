@@ -8,6 +8,7 @@ import Forecast from './forecast';
 import MentionsLegales from './mentionsLegales';
 import InscriptionManagement from './inscriptionManagement';
 import RecipeManagement from './recipeManagement';
+import Evenement from './evenement';
 import RecipeOrderTable from './recipeOrderTable';
 import DataBase from './dataBase';
 import './i18n';
@@ -26,6 +27,7 @@ function App() {
           path="/login" 
           element={isAuthenticated ? <Navigate to="/menu" replace={true} /> : <Login isAuthenticated={isAuthenticated} setAuthenticated={setAuthenticated} />} 
         />
+        <Route path="/evenement" element={isAuthenticated ? <Evenement isAuthenticated={isAuthenticated} /> : <Navigate to="/" replace={true} />} />
         <Route 
           path="/menuCreate" 
           element={isAuthenticated ? <MenuCreate isAuthenticated={isAuthenticated} /> : <Navigate to="/" replace={true} />} 

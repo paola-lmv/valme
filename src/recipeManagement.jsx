@@ -16,6 +16,7 @@ function RecipeManagement({ isAuthenticated }) {
   const [selectedRecipeIndex, setSelectedRecipeIndex] = useState(null);
   const [newDescription, setNewDescription] = useState('');
   const [newImage, setNewImage] = useState('');
+  const [newEvent, setNewEvent] = useState('');
   const { t, i18n } = useTranslation();
 
   // Fetches recipes when the component mounts
@@ -24,12 +25,14 @@ function RecipeManagement({ isAuthenticated }) {
         const allRecipe = await getData(BinIdRecipe); // Call the imported function to get data
         setRecipe(allRecipe.recipes);
         setLoading(false);
+        console.log("recipes",recipes)
     };
     fetchRecipe(recipes);
     const fetchIngredients = async () => {
           const allIngredients = await getData(BinIdIngredient); 
           setIngredientsList(allIngredients.ingredients);
           setIsIngredientsLoading(false); 
+          console.log("ingredients",ingredientsList)
         };
         fetchIngredients();
   }, []);
@@ -107,6 +110,7 @@ function RecipeManagement({ isAuthenticated }) {
           console.log(updatedRecipes[selectedRecipeIndex])
           updatedRecipes[selectedRecipeIndex].description = newDescription;
           updatedRecipes[selectedRecipeIndex].imageUrl = newImage; // Set new image if provided
+          updatedRecipes[selectedRecipeIndex].event = newEvent;
           console.log(updatedRecipes[selectedRecipeIndex])
           saveRecipe(updatedRecipes, BinIdRecipe, setRecipe); // Save updated recipe
           setShowEditModal(false);
@@ -240,6 +244,13 @@ function RecipeManagement({ isAuthenticated }) {
                 value={newImage}
                 onChange={(e) => setNewImage(e.target.value)}
                 style={{ marginBottom: '10px', display: 'block' }}
+              />
+               <input
+                  type="text"
+                  placeholder="event"
+                  value={newEvent}
+                  onChange={(e) => setNewEvent(e.target.value)}
+                  style={{ marginBottom: '10px', display: 'block' }}
               />
               <button
                 onClick={saveEdit}

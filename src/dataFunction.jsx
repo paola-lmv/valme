@@ -182,7 +182,6 @@ export const saveEvent = async (eventList, BinId, setEvent) => {
 // Synchronize ingredient data with recipe data, updating ingredient information
 export const SyncIngredients = (recipeList, existingIngredientList, isIngredientsLoading, isRecipesLoading, BinIdIngredient, setIngredientList) => {
 
-  useEffect(() => {
     if (!isIngredientsLoading && !isRecipesLoading) { // Run only when ingredients and recipes are loaded
       console.log("Synchronizing Ingredients with Recipes");
       const newIngredientList = []; // List to store new ingredients found from recipes
@@ -235,5 +234,4 @@ export const SyncIngredients = (recipeList, existingIngredientList, isIngredient
       const updatedIngredientList = [...newIngredientList, ...filteredIngredients];
       saveIngredient2(updatedIngredientList, BinIdIngredient, setIngredientList); // Save the updated ingredient list
     }
-  }, [isIngredientsLoading, isRecipesLoading]);
 };

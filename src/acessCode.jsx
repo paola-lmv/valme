@@ -1,6 +1,6 @@
-export const ACCESS_KEY = '$2a$10$XU3kt97s0b2y/8MneaVfmeefRNIwBF6NfhlEjIpm/QQn6Eq3IdWna';
-export const BinIdRecipe = '6735de6dad19ca34f8ca0199'
-export const BinIdIngredient='6735de9eacd3cb34a8a87eb7'
-export const BinIdLogin='6735deadad19ca34f8ca01bd'
-export const BinIdInscription='6735de84acd3cb34a8a87ea6'
-export const BinIdEvent='67a33091acd3cb34a8d8a4f0'
+export const ACCESS_KEY = '$2a$10$GjKBo0c0XMMIveLWhPUqV.xb4ascC50WTZbeQKdV1NCqsHUsZF1JO';
+export const BinIdRecipe = '67a47af5acd3cb34a8d93868'
+export const BinIdIngredient='67a47bb8acd3cb34a8d938c9'
+export const BinIdLogin='67a47b38ad19ca34f8fabcfc'
+export const BinIdInscription='67a47b24e41b4d34e48500de'
+export const BinIdEvent='67a47b4ce41b4d34e48500ff'

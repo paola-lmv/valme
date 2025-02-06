@@ -20,7 +20,7 @@ function InscriptionForm({ isAuthenticated }) {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
-
+    
     useEffect(() => {
         const fetchData = async () => {
             const allInscriptions = await getData(BinIdInscription);
@@ -62,6 +62,8 @@ function InscriptionForm({ isAuthenticated }) {
         <>
             {isAuthenticated ? <NavbarLoged /> : <NavbarUnLoged />}
             <h2>{t("Registration for an Event")}</h2>
+            { loading ? (<div>{t("Loading")}...</div>):
+            (<>
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="Surname">
                     <Form.Label>{t("Surname")}</Form.Label>
@@ -82,6 +84,7 @@ function InscriptionForm({ isAuthenticated }) {
                         required
                     >
                         <option value="">{t("Choose an event")}</option>
+                        {console.log("events",events)}
                         {events.map((event, index) => (
                             <option key={index} value={event.title}>{event.title}</option>
                         ))}
@@ -113,6 +116,7 @@ function InscriptionForm({ isAuthenticated }) {
 
                 <Button variant="primary" type="submit">{t("Submit")}</Button>
             </Form>
+            </>)}
 
             {message && <div className="alert alert-success mt-3">{message}</div>}
         </>

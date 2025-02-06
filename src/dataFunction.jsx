@@ -24,7 +24,8 @@ export const getData = async (BinId) => {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${BinId}/latest`, {
       method: 'GET',
       headers: { 
-        'X-Master-Key': ACCESS_KEY }
+        'X-Master-Key': ACCESS_KEY,
+      'Content-Type': 'application/json' }
     });
     const json = await res.json();
     return json.record; // Return the record from the JSON bin

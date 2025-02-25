@@ -25,6 +25,7 @@ function MenuDisplay({ isAuthenticated }) {
       const allIngredients = await getData(BinIdIngredient);  // Récupérer les ingrédients
       setRecipe(allRecipes.recipes);
       setEvents(allEvents.evenement);
+      console.log("events",events)
       setIngredients(allIngredients.ingredients);
       setIsLoading(false); // Fin du chargement
       setLoading(false);
@@ -49,15 +50,16 @@ function MenuDisplay({ isAuthenticated }) {
 
   // Associer chaque recette à un événement spécifique
   const groupRecipesByEvent = () => {
-    const groupedRecipes = events.map(event => {
-      return {
-        eventTitle: event.title,
-        recipes: recipes.filter(recipe => recipe.event === event.title)
-      };
-    });
-    return groupedRecipes;
-  };
-
+    console.log(events)
+    console.log("event1",!events )
+    console.log("event2",events.length === 0 )
+    if (events.length == 0) return [];
+    if (events.length =! 0) {
+    return events.map(event => ({
+      eventTitle: event.title,
+      recipes: recipes.filter(recipe => recipe.event === event.title),
+    }));}
+  };  
   const groupedRecipes = groupRecipesByEvent();
   
   return (
@@ -67,10 +69,11 @@ function MenuDisplay({ isAuthenticated }) {
       <Row>
         {isLoading && loading ? (
           <div>{t("Loading")}...</div>
-        ) : (
-          groupedRecipes.length === 0 ? (
-            <div>{t("No events available")}</div>
-          ) : (
+          ) : events.length === 0 ? (
+          <div>{t("No events available")}</div>
+          ) : groupedRecipes.length === 0 ? (
+          <div>{t("No recipes available")}</div>
+        ) : ( 
             // Afficher chaque événement avec ses recettes
             groupedRecipes.map((group, index) => (
               <Col sm={12} key={`event_${index}`}>
@@ -97,7 +100,7 @@ function MenuDisplay({ isAuthenticated }) {
               </Col>
             ))
           )
-        )}
+        }
       </Row>
 
       <footer style={{ textAlign: 'center', marginTop: '20px', padding: '10px', color:'black', fontWeight: 'bold', textDecoration: 'none' }}>          

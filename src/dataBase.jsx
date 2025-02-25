@@ -30,9 +30,10 @@ function DataBase({ isAuthenticated }) {
     fetchIngredientsList(); 
   }, []); // Empty dependency array to run only on component mount
 
+  useEffect(() => {
   // Synchronize ingredient data with recipes once both are loaded
   SyncIngredients(recipesList, ingredientsList, isIngredientsLoading, isRecipesLoading, BinIdIngredient, setIngredientsList);
-
+  },[isIngredientsLoading,isRecipesLoading,])
   // Handle changes in the ingredient input fields 
   const handleIngredientChange = (index, field, value) => {
     const updatedIngredientsList = [...ingredientsList]; // Create a copy of the ingredient data
@@ -42,6 +43,7 @@ function DataBase({ isAuthenticated }) {
 
   // Handle the save action, which persists the ingredient data
   const handleSaveData = () => {
+    SyncIngredients(recipesList, ingredientsList, isIngredientsLoading, isRecipesLoading, BinIdIngredient, setIngredientsList);
     saveIngredient2(ingredientsList, BinIdIngredient, setIngredientsList); // Save the updated ingredient data
   };
 

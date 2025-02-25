@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import NavbarUnLoged from './navbar_unloged';
 import NavbarLoged from './navbar_loged';
 import { BinIdRecipe, BinIdIngredient, BinIdInscription, BinIdEvent } from './acessCode';
-import { getData, saveRecipe, calculateMinPurchaseQty, handleChange, saveInscription, calculateIngredientPrice } from './dataFunction';
+import { getData, saveRecipe, calculateMinPurchaseQty, calculateIngredientPrice,handleChange } from './dataFunction';
 import { useTranslation } from "react-i18next";
 
 function RecipeOrderTable({ isAuthenticated }) {
   const [ingredients, setIngredients] = useState([]);
   const [filterRecipes, setFilterRecipes] = useState([]);
   const [touteRecipes, setTouteRecipes] = useState([]);
+  const [resteRecipes, setResteRecipes] = useState([]);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,8 +35,10 @@ function RecipeOrderTable({ isAuthenticated }) {
       const allRecipe = await getData(BinIdRecipe);
       setTouteRecipes(allRecipe.recipes)
       setFilterRecipes(allRecipe.recipes.filter(recipe => recipe.event === selectedEvent.title)); // On filtre par titre
+      setResteRecipes(allRecipe.recipes.filter(recipe => recipe.event ==! selectedEvent.title))
       setLoadingData(false);
       console.log("filterRecipes", filterRecipes);
+      console.log("resteRecipes", resteRecipes);
       console.log("touteRecipes", touteRecipes);
 
     };
@@ -86,7 +89,8 @@ function RecipeOrderTable({ isAuthenticated }) {
   };
 
   useEffect(() => {
-    if (!loading && !loadingData && selectedEvent) {
+    if (!loading && !loadingData) {
+      console.log("calculateIngredientData")
       calculateIngredientData();
     }
   }, [loading, loadingData, selectedEvent]);
@@ -104,6 +108,22 @@ function RecipeOrderTable({ isAuthenticated }) {
   const calculateTotalPrice = () => {
     return filterRecipes.reduce((total, recipe) => total + (recipe.price || 0), 0).toFixed(2);
   };
+
+  const handleChangebis = (index, field, value, dataList, saveFunction, BinId, setIngredientList) => {
+    console.log("data",dataList)
+    
+    setFilterRecipes(dataList)
+    dataList[index][field] = value; // Update the specific field for the selected ingredient
+    const updatedIngredientList =[
+        ...dataList,
+        ...resteRecipes
+      ];
+    console.log("update recipe",updatedIngredientList)
+    console.log("command",dataList[index][field])
+    saveFunction(updatedIngredientList, BinId, setIngredientList); // Save the updated ingredient list
+    calculateIngredientData()
+  };
+  
 
   return (
     <>
@@ -151,7 +171,7 @@ function RecipeOrderTable({ isAuthenticated }) {
                       <input
                         type="number"
                         value={recipe.command}
-                        onChange={(e) => handleChange(index, 'command', e.target.value, recipes, saveRecipe, BinIdRecipe, setRecipes)}
+                        onChange={(e) => handleChangebis(index, 'command', e.target.value, filterRecipes, saveRecipe, BinIdRecipe, setTouteRecipes)}
                       />
                     </td>
                     <td>

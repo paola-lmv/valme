@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import NavbarUnLoged from './navbar_unloged';
 import NavbarLoged from './navbar_loged';
-import { getData, saveEvent, deleteEvent, updateEvent } from './dataFunction';
-import { BinIdEvent } from './acessCode';
+import { getData,saveIngredient2,saveRecipe, saveEvent, deleteEvent, updateEvent,saveInscription } from './dataFunction';
+import { BinIdEvent, BinIdInscription,BinIdRecipe,BinIdIngredient } from './acessCode';
 import { useTranslation } from "react-i18next";
 import { Modal, Button, Form } from 'react-bootstrap';
 
 function Evenement({ isAuthenticated }) {
+  const [recipes, setRecipe] = useState([]);
+  const [ingredientsList, setIngredientsList] = useState([]);
   const [eventsList, setEventsList] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
+  const [inscriptions, setInscriptions] = useState([]);
+
   const [newEvent, setNewEvent] = useState({
     title: '',
     date: '',
@@ -20,13 +24,23 @@ function Evenement({ isAuthenticated }) {
   });
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetch = async () => {
+      const allInscription = await getData(BinIdInscription);
       const allEvents = await getData(BinIdEvent);
-      console.log(allEvents)
+      const allRecipe = await getData(BinIdRecipe); // Call the imported function to get data
+      const allIngredients = await getData(BinIdIngredient); 
+      console.log("ingredients",allIngredients.ingredients)
+      console.log("eventsList",allEvents.evenement)
+      console.log("recipes",allRecipe.recipes)
+      console.log("inscriptions",allInscription.inscriptions)
       setEventsList(allEvents.evenement);
+      setRecipe(allRecipe.recipes);
+      setIngredientsList(allIngredients.ingredients);
+      setInscriptions(allInscription.inscriptions); //  On récupère aussi les inscriptions
       setIsLoading(false);
     };
-    fetchEvents();
+    fetch();
+
   }, []);
 
   // Fonction pour ouvrir la modale d'édition
@@ -34,15 +48,46 @@ function Evenement({ isAuthenticated }) {
     setSelectedEvent(event);
     setShowModal(true);
   };
+
+  // Deletes a recipe from the list
+    const handleDeleteRecipies = (recipeToDelete) => {
+      console.log("supprime une recette")
+        
+      ingredientsList.forEach((ingredient) => {
+              console.log(ingredient,"pour chaque ingrédient")
+              // Check if the ingredient's listRecipe includes the title of the recipe to delete
+              if (ingredient.listRecipe && ingredient.listRecipe.includes(recipeToDelete.title)) {
+                console.log("dans le if")
+                  // Remove the recipe title from the listRecipe
+                  ingredient.listRecipe = ingredient.listRecipe.filter(
+                      (title) => title !== recipeToDelete.title
+                  );
+              }
+          })
+          const updatedRecipe = recipes.filter(
+            (recipe) => recipe.title !== recipeToDelete.title
+          )
+        saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Save the updated list
+        saveIngredient2(ingredientsList, BinIdIngredient, setIngredientsList); // Save the updated ingredient data
+        
+    };
+
   const handleDeleteEvent = async (index) => {
-    // Création d'une nouvelle liste sans l'élément supprimé
+    console.log("supprime un evenement")
+    const eventToDelete = eventsList[index].title;
+  
     const updatedEvents = eventsList.filter((_, i) => i !== index);
+    const updatedInscriptions = inscriptions.filter(
+      (inscription) => inscription.event !== eventToDelete // 🔥 Filtrer les inscriptions liées
+    );
   
-    // Mise à jour des données dans la base
-    await deleteEvent(updatedEvents,BinIdEvent);
+    await deleteEvent({ evenement: updatedEvents},  BinIdEvent);
+    recipes.forEach((recipe) => { handleDeleteRecipies(recipe) })
+
+    saveInscription(updatedInscriptions, BinIdInscription, setInscriptions);
   
-    // Mise à jour de l'état
     setEventsList(updatedEvents);
+    setInscriptions(updatedInscriptions); // 🔥 Met à jour les inscriptions après suppression
   };
 
   // Fonction pour fermer la modale
@@ -108,7 +153,6 @@ function Evenement({ isAuthenticated }) {
               </tr>
             </thead>
             <tbody>
-              {console.log(eventsList)}
               {eventsList.map((event, index) => (
                 <tr key={index}>
                   <td>{event.title}</td>

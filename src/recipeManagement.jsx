@@ -22,19 +22,19 @@ function RecipeManagement({ isAuthenticated }) {
   // Fetches recipes when the component mounts
   useEffect(() => {
     const fetchRecipe = async () => {
-        const allRecipe = await getData(BinIdRecipe); // Call the imported function to get data
-        setRecipe(allRecipe.recipes);
-        setLoading(false);
-        console.log("recipes",recipes)
+      const allRecipe = await getData(BinIdRecipe); // Call the imported function to get data
+      setRecipe(allRecipe.recipes);
+      setLoading(false);
+      console.log("recipes",recipes)
     };
     fetchRecipe(recipes);
     const fetchIngredients = async () => {
-          const allIngredients = await getData(BinIdIngredient); 
-          setIngredientsList(allIngredients.ingredients);
-          setIsIngredientsLoading(false); 
-          console.log("ingredients",ingredientsList)
-        };
-        fetchIngredients();
+      const allIngredients = await getData(BinIdIngredient); 
+      setIngredientsList(allIngredients.ingredients);
+      setIsIngredientsLoading(false); 
+      console.log("ingredients",ingredientsList)
+      };
+    fetchIngredients();
   }, []);
 
   // Opens the modal for adding an ingredient

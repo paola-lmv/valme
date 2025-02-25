@@ -10,6 +10,7 @@ function NewRecipe({ addRecipe, eventsList }) {
   const [portions, setPortion] = useState("");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [command, setCommand] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(""); // Événement sélectionné
   const { t, i18n } = useTranslation();
 
@@ -35,6 +36,7 @@ function NewRecipe({ addRecipe, eventsList }) {
       portions,
       description,
       imageUrl,
+      command,
       event: selectedEvent // Ajouter l'événement à la recette
     };
 
@@ -47,6 +49,7 @@ function NewRecipe({ addRecipe, eventsList }) {
     setDescription("");
     setPortion("");
     setImageUrl("");
+    setCommand(""),
     setSelectedEvent(""); // Réinitialiser l'événement sélectionné
   };
 

@@ -1,7 +1,7 @@
-import NavbarUnLoged from './navbar_unloged'; 
+import NavbarUnLoged from './navbar_unloged';
 import NavbarLoged from './navbar_loged';
 import React, { useState, useEffect } from 'react';
-import { BinIdInscription } from './acessCode'
+import { BinIdInscription } from './acessCode';
 import { getData, saveInscription, handleChange } from './dataFunction';
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +13,7 @@ function InscriptionManagement({ isAuthenticated }) {
   useEffect(() => {
     const fetchInscriptions = async () => {
       const allInscriptions = await getData(BinIdInscription);
-      setInscriptionList(allInscriptions.inscriptions);
+      setInscriptionList(allInscriptions.inscriptions || []);
       setIsLoading(false);
     };
     fetchInscriptions();
@@ -48,9 +48,12 @@ function InscriptionManagement({ isAuthenticated }) {
 
       <div>
         <h2>{t("Event Registrations")}</h2><br/>
-        {isLoading ? <p>{t("Loading...")}</p> : (
+        {isLoading ? (
+          <p>{t("Loading...")}</p>
+        ) : inscriptionList.length === 0 ? (
+          <p>{t("No registrations available.")}</p>
+        ) : (
           Object.entries(groupedByEvent).map(([eventName, eventInscriptions]) => {
-            // Trouver les statistiques de l'événement
             const { totalInscribed, vegetarianCount } = eventSummary.find(event => event.eventName === eventName) || {};
 
             return (

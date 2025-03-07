@@ -88,7 +88,6 @@ function Forecast({ isAuthenticated }) {
 
     console.log("updatedIngredients", updatedIngredients);
     setIngredientsList(updatedIngredients);
-    setfilteredIngredients(updatedIngredients.filter(ingredient => selectedrecepie.some(recipe =>recipe.ingredients.some(ing => ing.type === ingredient.type))))
     saveIngredient2(updatedIngredients, BinIdIngredient, setIngredientsList);
   };
 
@@ -96,6 +95,7 @@ function Forecast({ isAuthenticated }) {
     setSelectedEvent(events[parseInt(e.target.value)]);
   };
 
+  
 
   const handleCopyMinToPurchase = () => {
     console.log("handleCopyMinToPurchase")
@@ -107,6 +107,7 @@ function Forecast({ isAuthenticated }) {
     setfilteredIngredients(updatedIngredients.filter(ingredient => selectedrecepie.some(recipe =>recipe.ingredients.some(ing => ing.type === ingredient.type))))
     saveIngredient2(updatedIngredients, BinIdIngredient, setIngredientsList);
   };
+
 
   const totalIngredientPrice = filteredIngredients.reduce((sum, ingredient) => sum + (ingredient.ingredientPrice || 0), 0).toFixed(2);
 

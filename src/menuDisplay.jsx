@@ -54,7 +54,7 @@ function MenuDisplay({ isAuthenticated }) {
     console.log("event1",!events )
     console.log("event2",events.length === 0 )
     if (events.length == 0) return [];
-    if (events.length =! 0) {
+    if (events.length !== 0) {
     return events.map(event => ({
       eventTitle: event.title,
       recipes: recipes.filter(recipe => recipe.event === event.title),

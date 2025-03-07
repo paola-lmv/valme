@@ -65,7 +65,7 @@ export const deleteEvent = async (eventToDelete,BinId) => {
         'Content-Type': 'application/json',
         'X-Master-Key': ACCESS_KEY
       },
-      body: JSON.stringify({evenement: eventToDelete}),
+      body: JSON.stringify( eventToDelete),
     });
 
     if (!response.ok) {
@@ -80,7 +80,7 @@ export const deleteEvent = async (eventToDelete,BinId) => {
 };
 
 // Fonction pour mettre à jour un événement
-export const updateEvent = async (eventToUpdate) => {
+export const updateEvent = async (eventToUpdate,BinId) => {
   try {
     // Supposons que vous ayez une API qui accepte une requête PUT pour mettre à jour un événement
     const response = await fetch(`https://api.jsonbin.io/v3/b/${BinId}`, {

@@ -145,6 +145,8 @@ function Forecast({ isAuthenticated }) {
         <p>{t("Loading")}...</p>
       ) : (
         <>
+        <p>La quantité minimale d'achat correspond à la quantité minimum requise pour satisfaire le nombre de commandes souhaité. En revanche, la quantité d'achat choisie représente la quantité d'ingrédient que l'on souhaite réellement acheter, en tenant compte du fait qu'il est impossible, par exemple, d'acheter 3,5 œuf. Ainsi, lors des achats, il faut se baser sur la quantité d'achat choisie pour déterminer les quantités à commander. Le calcul du prix se fait alors en fonction de cette dernière quantité.</p>
+        <p>Oublie pas de sauvegarder en bas de la page toute modification !!!</p>
           <button onClick={handleCopyMinToPurchase} style={{ marginTop: '10px', marginLeft: '10px', padding: '10px', fontSize: '16px' }}>
             {t("Copy Minimum Purchase to Chosen Purchase")}
           </button>

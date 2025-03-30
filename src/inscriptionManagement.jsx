@@ -59,8 +59,8 @@ function InscriptionManagement({ isAuthenticated }) {
             return (
               <div key={eventName}>
                 <h3>{t("Event:")} {eventName}</h3>
-                <p>{t("Total Participants:")}: {totalInscribed}</p>
-                <p>{t("Vegetarian Participants:")}: {vegetarianCount}</p>
+                <p>{t("Total Participants:")} {totalInscribed}</p>
+                <p>{t("Vegetarian Participants:")} {vegetarianCount}</p>
                 <table border="1">
                   <thead>
                     <tr>

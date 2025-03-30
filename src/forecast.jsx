@@ -9,7 +9,7 @@ function Forecast({ isAuthenticated }) {
   const [ingredientsList, setIngredientsList] = useState([]);
   const [filteredIngredients, setfilteredIngredients] = useState([]);
   const [recipesList, setRecipesList] = useState([]);
-  const [selectedrecepie, setSelectrecepie] = useState([]);
+  const [selectedrecepie, setSelectedrecepie] = useState([]);
   const [resterecepie, setResterecepie] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null); // Objet événement sélectionné
   const { t } = useTranslation();
@@ -33,27 +33,35 @@ function Forecast({ isAuthenticated }) {
 
     console.log("useEffect fetch")
     const fetchRecipe = async () => {
+      console.log("fetchRecipe")
       const allRecipes = await getData(BinIdRecipe);
-      setSelectrecepie(allRecipes.recipes.filter(recipe => recipe.event === selectedEvent.title));
+      setSelectedrecepie(allRecipes.recipes.filter(recipe => recipe.event === selectedEvent.title));
       setResterecepie(allRecipes.recipes.filter(recipe => recipe.event !== selectedEvent.title));
       setRecipesList(allRecipes.recipes);
       console.log("Selectrecepie",allRecipes.recipes.filter(recipe => recipe.event === selectedEvent.title))
       console.log("Resterecepie",allRecipes.recipes.filter(recipe => recipe.event !== selectedEvent.title))
       console.log("RecipesList",allRecipes.recipes)
       setLoadingRecipe(false);
+      return allRecipes;
     };
-
-    const fetchIngredient = async () => {
+    
+    const fetchIngredient = async (allRecipes) => {
+      console.log("fetchIngredient")
       const allIngredients = await getData(BinIdIngredient);
+      const newSelectRecepie = (allRecipes.recipes.filter(recipe => recipe.event === selectedEvent.title))
+      console.log("newSelectRecepie",newSelectRecepie)
       setIngredientsList(allIngredients.ingredients);
-      setfilteredIngredients(allIngredients.ingredients.filter(ingredient => selectedrecepie.some(recipe =>recipe.ingredients.some(ing => ing.type === ingredient.type))))
+      setfilteredIngredients(allIngredients.ingredients.filter(ingredient =>
+        newSelectRecepie.some(recipe =>
+          recipe.ingredients.some(ing => ing.type === ingredient.type)
+        ))
+      );
       console.log("filteredIngredients",allIngredients.ingredients.filter(ingredient => selectedrecepie.some(recipe =>recipe.ingredients.some(ing => ing.type === ingredient.type))))
       console.log("ingredients",allIngredients.ingredients)
       setLoadingData(false);
     };
 
-    fetchRecipe();
-    fetchIngredient();
+    fetchRecipe().then(allRecipes => fetchIngredient(allRecipes))
   }, [selectedEvent]); // Trigger on selectedEvent change
 
   useEffect(() => {
@@ -65,14 +73,14 @@ function Forecast({ isAuthenticated }) {
 
   const recalculateIngredientData = () => {
     console.log("recalculateIngredientData");
-    const updatedIngredients = ingredientsList.map(ingredient => {
+    const updatedIngredients = filteredIngredients.map(ingredient => {
       let totalMinPurchaseQty = 0;
       ingredient.listRecipe.forEach(recipeName => {
         const matchingRecipe = recipesList.find(recipe => recipe.title === recipeName);
-        if (matchingRecipe) {
+        if (matchingRecipe && matchingRecipe.event === selectedEvent.title ) {
           const commandQty = parseFloat(matchingRecipe.command);
           const matchingIngredient = matchingRecipe.ingredients.find(ing => ing.type === ingredient.type);
-          if (matchingIngredient) {
+          if (matchingIngredient ) {
             const ingredientQty = parseFloat(matchingIngredient.quantity);
             const portionQty = parseFloat(matchingRecipe.portions);
             totalMinPurchaseQty += calculateMinPurchaseQty(commandQty, ingredientQty, portionQty);
@@ -87,7 +95,7 @@ function Forecast({ isAuthenticated }) {
     });
 
     console.log("updatedIngredients", updatedIngredients);
-    setIngredientsList(updatedIngredients);
+    setfilteredIngredients(updatedIngredients);
     saveIngredient2(updatedIngredients, BinIdIngredient, setIngredientsList);
   };
 
@@ -152,8 +160,7 @@ function Forecast({ isAuthenticated }) {
                 </tr>
               </thead>
               <tbody>
-                {console.log("filteredIngredients",filteredIngredients)}
-                {filteredIngredients.map((ingredient, index) => (
+                  {filteredIngredients.map((ingredient, index) => (
                   <tr key={index}>
                     <td>{ingredient.type}</td>
                     <td>{ingredient.minPurchaseQty}</td>

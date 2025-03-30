@@ -32,10 +32,11 @@ function RecipeOrderTable({ isAuthenticated }) {
     if (!selectedEvent) return console.log("pas de evenement sélectionné");
   
     const fetchRecipe = async () => {
+      console.log("fetchRecipe")
       const allRecipe = await getData(BinIdRecipe);
       setTouteRecipes(allRecipe.recipes)
       setFilterRecipes(allRecipe.recipes.filter(recipe => recipe.event === selectedEvent.title)); // On filtre par titre
-      setResteRecipes(allRecipe.recipes.filter(recipe => recipe.event ==! selectedEvent.title))
+      setResteRecipes(allRecipe.recipes.filter(recipe => recipe.event !== selectedEvent.title))
       setLoadingData(false);
       console.log("filterRecipes", filterRecipes);
       console.log("resteRecipes", resteRecipes);
@@ -45,6 +46,7 @@ function RecipeOrderTable({ isAuthenticated }) {
     fetchRecipe();
   
     const fetchIngredient = async () => {
+      console.log("fetchIngredient")
       const allIngredients = await getData(BinIdIngredient);
       setIngredients(allIngredients.ingredients);
       console.log("ingredients", ingredients);
@@ -52,6 +54,7 @@ function RecipeOrderTable({ isAuthenticated }) {
     fetchIngredient();
   
     const fetchInscriptions = async () => {
+      console.log("fetchInscriptions")
       const allInscriptions = await getData(BinIdInscription);
       setInscriptionList(allInscriptions.inscriptions.filter(inscription => inscription.event === selectedEvent.title)); // On filtre par titre
       console.log("inscriptions", inscriptionList);
@@ -64,6 +67,7 @@ function RecipeOrderTable({ isAuthenticated }) {
   const NumberVegetarians = inscriptionList.filter(inscription => inscription.vege === 'Yes').length;
 
   const calculateIngredientData = () => {
+    console.log("calculateIngredientData")
     touteRecipes.forEach(recipe => {
       recipe.price = 0;
     });
@@ -90,7 +94,6 @@ function RecipeOrderTable({ isAuthenticated }) {
 
   useEffect(() => {
     if (!loading && !loadingData) {
-      console.log("calculateIngredientData")
       calculateIngredientData();
     }
   }, [loading, loadingData, selectedEvent]);
@@ -106,6 +109,7 @@ function RecipeOrderTable({ isAuthenticated }) {
   };
 
   const calculateTotalPrice = () => {
+    console.log("calculateTotalPrice")
     return filterRecipes.reduce((total, recipe) => total + (recipe.price || 0), 0).toFixed(2);
   };
 

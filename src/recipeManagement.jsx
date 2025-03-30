@@ -98,6 +98,7 @@ function RecipeManagement({ isAuthenticated }) {
       setSelectedRecipeIndex(index);
       setNewDescription(recipes[index].description || ''); // Populate with current description
       setNewImage(recipes[index].imageUrl || '');
+      setNewEvent(recipes[index].event || '');
       setShowEditModal(true);
   };
 

@@ -190,7 +190,7 @@ function RecipeOrderTable({ isAuthenticated }) {
           </div>
         </>
       ) : (
-        <div>{t("Loading events or data...")}</div>
+        <div>{t("Loading data...")}</div>
       )}
     </>
   );

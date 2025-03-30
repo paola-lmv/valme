@@ -19,40 +19,36 @@ function MenuDisplay({ isAuthenticated }) {
 
   // Fetching les recettes, événements et ingrédients
   useEffect(() => {
-    const fetchData = async () => {
-      const allRecipes = await getData(BinIdRecipe); // Récupérer les recettes
-      const allEvents = await getData(BinIdEvent);  // Récupérer les événements
-      const allIngredients = await getData(BinIdIngredient);  // Récupérer les ingrédients
-      setRecipe(allRecipes.recipes);
+    const fetchEvents = async () => {
+      console.log("fetchEvents")
+      const allEvents = await getData(BinIdEvent);
       setEvents(allEvents.evenement);
-      console.log("events",events)
-      setIngredients(allIngredients.ingredients);
-      setIsLoading(false); // Fin du chargement
-      setLoading(false);
     };
-    fetchData();
+    const fetchRecipe = async () => {
+      console.log("fetchRecipe")
+      const allRecipes = await getData(BinIdRecipe);
+      setRecipe(allRecipes.recipes);          
+      setLoading(false);
+      console.log("Recipes", recipes); 
+    };
+    const fetchIngredient = async () => {
+      console.log("fetchIngredient")
+      const allIngredients = await getData(BinIdIngredient);
+      setIngredients(allIngredients.ingredients);
+      console.log("ingredients", ingredients);
+      setIsLoading(false);       
+    };
+    fetchEvents().then(() => {
+         return fetchRecipe();
+      }).then(() => {
+        return fetchIngredient();
+      }).catch(error => {
+        console.error("Erreur lors du chargement des données", error);
+      });
   }, []);
-
-  // Fonction pour supprimer une recette
-  const deleteRecipe = (index) => {
-    const recipeToDelete = recipes[index];
-    ingredients.forEach((ingredient) => {
-      if (ingredient.listRecipe && ingredient.listRecipe.includes(recipeToDelete.title)) {
-        ingredient.listRecipe = ingredient.listRecipe.filter(
-          (title) => title !== recipeToDelete.title
-        );
-      }
-    });
-    const updatedRecipe = recipes.filter((_, i) => i !== index);
-    saveIngredient2(ingredients, BinIdIngredient, setIngredients); // Sauvegarder les ingrédients mis à jour
-    saveRecipe(updatedRecipe, BinIdRecipe, setRecipe); // Sauvegarder la liste des recettes mise à jour
-  };
 
   // Associer chaque recette à un événement spécifique
   const groupRecipesByEvent = () => {
-    console.log(events)
-    console.log("event1",!events )
-    console.log("event2",events.length === 0 )
     if (events.length == 0) return [];
     if (events.length !== 0) {
     return events.map(event => ({
@@ -86,12 +82,8 @@ function MenuDisplay({ isAuthenticated }) {
                       <Col sm={12} md={6} lg={4} key={`recipe_${recipeIndex}`}>
                         <Recipe
                           isAuthenticated={isAuthenticated}
-                          title={recipe.title}
-                          portions={recipe.portions}
-                          description={recipe.description}
-                          imageUrl={recipe.imageUrl}
-                          deleteRecipe={() => deleteRecipe(recipeIndex)}
-                          index={recipeIndex}
+                          recipe={recipe}
+                          delelete={() =>groupRecipesByEvent() }
                         />
                       </Col>
                     ))}

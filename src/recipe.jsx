@@ -6,19 +6,9 @@ import { BinIdRecipe } from './acessCode';
 import { getData, saveIngredient } from './dataFunction'; 
 import { useTranslation } from "react-i18next"; 
 
-function Recipe({ isAuthenticated, title, portions, description, imageUrl, deleteRecipe, index }) {
-  const [ingredients, setIngredient] = useState([]); // State for ingredients
-  const [loading, setLoading] = useState(true); // Loading state
+function Recipe({ isAuthenticated, recipe, deleteRecipe }) {
   const { t, i18n } = useTranslation(); // i18n translation function
-
-  useEffect(() => {
-    const fetchIngredient = async () => {
-      const allIngredient = await getData(BinIdRecipe); // Fetch ingredients data
-      setIngredient(allIngredient.recipes[index].ingredients); // Update state with ingredients
-      setLoading(false); // Set loading to false once data is fetched
-    };
-    fetchIngredient(ingredients);
-  }, []); // Only run once when component mounts
+  const { title, portions, description, imageUrl, ingredients } = recipe;
 
   return (
     <Card>

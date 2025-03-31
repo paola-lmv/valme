@@ -13,7 +13,8 @@ function RecipeOrderTable({ isAuthenticated }) {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingData, setLoadingData] = useState(true);
+  const [loadingIngredient, setLoadingIngredient] = useState(true);
+  const [loadingRecipe, setLoadingRecipe] = useState(true);
   const { t } = useTranslation();
   const [inscriptionList, setInscriptionList] = useState([]);
 
@@ -37,7 +38,7 @@ function RecipeOrderTable({ isAuthenticated }) {
       setTouteRecipes(allRecipe.recipes)
       setFilterRecipes(allRecipe.recipes.filter(recipe => recipe.event === selectedEvent.title)); // On filtre par titre
       setResteRecipes(allRecipe.recipes.filter(recipe => recipe.event !== selectedEvent.title))
-      setLoadingData(false);
+      setLoadingRecipe(false);
       console.log("filterRecipes", filterRecipes);
       console.log("resteRecipes", resteRecipes);
       console.log("touteRecipes", touteRecipes);
@@ -50,6 +51,7 @@ function RecipeOrderTable({ isAuthenticated }) {
       const allIngredients = await getData(BinIdIngredient);
       setIngredients(allIngredients.ingredients);
       console.log("ingredients", ingredients);
+      setLoadingIngredient(false);
     };
     fetchIngredient();
   
@@ -61,7 +63,12 @@ function RecipeOrderTable({ isAuthenticated }) {
     };
     fetchInscriptions();
   }, [selectedEvent]);
-  
+
+  useEffect(() => {
+      if (!loading && !loadingRecipe && !loadingIngredient) {
+        calculateIngredientData();
+      }
+    }, [loadingIngredient, loadingRecipe, loading,selectedEvent]);
 
   const NumberInscription = inscriptionList.length;
   const NumberVegetarians = inscriptionList.filter(inscription => inscription.vege === 'Yes').length;
@@ -75,7 +82,7 @@ function RecipeOrderTable({ isAuthenticated }) {
     ingredients.forEach((ingredient) => {
       ingredient.listRecipe.forEach((item) => {
         const matchingRecipe = touteRecipes.find(recIng => recIng.title === item);
-        if (matchingRecipe) {
+        if (matchingRecipe && matchingRecipe.event === selectedEvent.title ) {
           const ingredientData = matchingRecipe.ingredients.find(ing => ing.type === ingredient.type);
           if (ingredientData) {
             matchingRecipe.price += parseFloat(
@@ -89,14 +96,9 @@ function RecipeOrderTable({ isAuthenticated }) {
         }
       });
     });
+    console.log("touteRecipes",touteRecipes)
     saveRecipe(touteRecipes, BinIdRecipe, setTouteRecipes);
   };
-
-  useEffect(() => {
-    if (!loading && !loadingData) {
-      calculateIngredientData();
-    }
-  }, [loading, loadingData, selectedEvent]);
 
   const updateAllRecipeCommands = () => {
     const updatedRecipes = touteRecipes.map(recipe => ({
@@ -113,20 +115,19 @@ function RecipeOrderTable({ isAuthenticated }) {
     return filterRecipes.reduce((total, recipe) => total + (recipe.price || 0), 0).toFixed(2);
   };
 
-  const handleChangebis = (index, field, value, dataList, saveFunction, BinId, setIngredientList) => {
+  const handleChangebis = (index, field, value, dataList) => {
     console.log("data",dataList)
     
-    setFilterRecipes(dataList)
     dataList[index][field] = value; // Update the specific field for the selected ingredient
-    const updatedIngredientList =[
+    const updatedRecipeList =[
         ...dataList,
         ...resteRecipes
       ];
-    console.log("update recipe",updatedIngredientList)
+    console.log("update recipe",updatedRecipeList)
     console.log("command",dataList[index][field])
-    saveFunction(updatedIngredientList, BinId, setIngredientList); // Save the updated ingredient list
-    calculateIngredientData()
-  };
+    setFilterRecipes(dataList);
+    setTouteRecipes(updatedRecipeList);
+    };
   
 
   return (
@@ -151,7 +152,7 @@ function RecipeOrderTable({ isAuthenticated }) {
   </>
 )}
 
-      { !loadingData ? (
+      { !loadingIngredient && !loadingRecipe ? (
         <>
           <h6>{t("Number of inscription at the event :")} {NumberInscription}</h6>
           <h6>{t("Number of vegetarians :")}{NumberVegetarians}</h6>
@@ -175,7 +176,7 @@ function RecipeOrderTable({ isAuthenticated }) {
                       <input
                         type="number"
                         value={recipe.command}
-                        onChange={(e) => handleChangebis(index, 'command', e.target.value, filterRecipes, saveRecipe, BinIdRecipe, setTouteRecipes)}
+                        onChange={(e) => handleChangebis(index, 'command', e.target.value, filterRecipes)}
                       />
                     </td>
                     <td>
@@ -186,6 +187,9 @@ function RecipeOrderTable({ isAuthenticated }) {
                 ))}
               </tbody>
             </table>
+            <button onClick={calculateIngredientData} style={{ marginTop: '20px', padding: '10px', fontSize: '16px' }}>
+              {t("Save and Recalculate")}
+            </button>
             <h6>{t("Total Price of All Recipes:")} {calculateTotalPrice()} €</h6>
           </div>
         </>

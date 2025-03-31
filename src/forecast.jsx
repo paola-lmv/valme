@@ -68,36 +68,55 @@ function Forecast({ isAuthenticated }) {
     if (!loading && !loadingRecipe && !loadingData) {
       recalculateIngredientData();
     }
-  }, [loadingData, loadingRecipe, loading]);
+  }, [loadingData, loadingRecipe, loading,selectedEvent]);
 
 
   const recalculateIngredientData = () => {
     console.log("recalculateIngredientData");
-    const updatedIngredients = filteredIngredients.map(ingredient => {
-      let totalMinPurchaseQty = 0;
-      ingredient.listRecipe.forEach(recipeName => {
-        const matchingRecipe = recipesList.find(recipe => recipe.title === recipeName);
-        if (matchingRecipe && matchingRecipe.event === selectedEvent.title ) {
-          const commandQty = parseFloat(matchingRecipe.command);
-          const matchingIngredient = matchingRecipe.ingredients.find(ing => ing.type === ingredient.type);
-          if (matchingIngredient ) {
-            const ingredientQty = parseFloat(matchingIngredient.quantity);
-            const portionQty = parseFloat(matchingRecipe.portions);
-            totalMinPurchaseQty += calculateMinPurchaseQty(commandQty, ingredientQty, portionQty);
+    const updatedIngredients = ingredientsList.map(ingredient => {
+      // Vérifier si cet ingrédient est utilisé dans une recette de l'événement sélectionné
+      const isInEvent = ingredient.listRecipe.some(recipeTitle => {
+        const matchingRecipe = recipesList.find(recipe => recipe.title === recipeTitle);
+        return matchingRecipe && matchingRecipe.event === selectedEvent.title;
+      });
+      if (isInEvent) {
+        let totalMinPurchaseQty = 0;
+        ingredient.listRecipe.forEach(recipeName => {
+          const matchingRecipe = recipesList.find(recipe => recipe.title === recipeName);
+          if (matchingRecipe && matchingRecipe.event === selectedEvent.title) {
+            const commandQty = parseFloat(matchingRecipe.command);
+            const matchingIngredient = matchingRecipe.ingredients.find(ing => ing.type === ingredient.type);
+            if (matchingIngredient) {
+              const ingredientQty = parseFloat(matchingIngredient.quantity);
+              const portionQty = parseFloat(matchingRecipe.portions);
+              totalMinPurchaseQty += calculateMinPurchaseQty(commandQty, ingredientQty, portionQty);
+            }
           }
-        }
-      });   
-      return {
-        ...ingredient,
-        minPurchaseQty: parseFloat(totalMinPurchaseQty.toFixed(2)),
-        ingredientPrice: parseFloat(calculateIngredientPrice(ingredient.unitPrice, ingredient.purchaseQty, ingredient.priceQty).toFixed(2)) || 0,
-      };
+        });
+        return {
+          ...ingredient,
+          minPurchaseQty: parseFloat(totalMinPurchaseQty.toFixed(2)),
+          ingredientPrice: parseFloat(
+            calculateIngredientPrice(ingredient.unitPrice, ingredient.purchaseQty, ingredient.priceQty)
+              .toFixed(2)
+          ) || 0,
+        };
+      } else {
+        return ingredient;
+      }
     });
-
+  
     console.log("updatedIngredients", updatedIngredients);
-    setfilteredIngredients(updatedIngredients);
+    setfilteredIngredients(
+      updatedIngredients.filter(ingredient =>
+        selectedrecepie.some(recipe =>
+          recipe.ingredients.some(ing => ing.type === ingredient.type)
+        )
+      )
+    );
     saveIngredient2(updatedIngredients, BinIdIngredient, setIngredientsList);
   };
+  
 
   const handleEventChange = (e) => {
     setSelectedEvent(events[parseInt(e.target.value)]);
@@ -145,6 +164,7 @@ function Forecast({ isAuthenticated }) {
         <p>{t("Loading")}...</p>
       ) : (
         <>
+        <br/>
         <p>La quantité minimale d'achat correspond à la quantité minimum requise pour satisfaire le nombre de commandes souhaité. En revanche, la quantité d'achat choisie représente la quantité d'ingrédient que l'on souhaite réellement acheter, en tenant compte du fait qu'il est impossible, par exemple, d'acheter 3,5 œuf. Ainsi, lors des achats, il faut se baser sur la quantité d'achat choisie pour déterminer les quantités à commander. Le calcul du prix se fait alors en fonction de cette dernière quantité.</p>
         <p>Oublie pas de sauvegarder en bas de la page toute modification !!!</p>
           <button onClick={handleCopyMinToPurchase} style={{ marginTop: '10px', marginLeft: '10px', padding: '10px', fontSize: '16px' }}>
